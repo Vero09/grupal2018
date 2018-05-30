@@ -142,6 +142,8 @@ El Refugio Nacional de Vida Silvestre Punta Mala está localizado en la costa de
  
 ##Proceso de análisis 
 
+
+
 ###Recursos de información
 
  Para realizar el análisis requerimos los siguientes recursos de información:
@@ -198,9 +200,37 @@ Se establecerán parcelas de (10 x 10) m, estas serán medidas con cinta métric
 
 A cada individuo colectado, se le tomarán las medidas correspondientes, con un vernier de ±0.005 mm, se anotará además si el animal esta vivo o muerto.
 
+#Análisis estadistico 
 
+Para el analisis de los datos recolectados, se procedio a escoger el paquete de R, llamado "Rmark", es un modelo que se utiliza para animales no marcados y que se adapta a distintos caracteristicas, donde uno de ellos es el planteado en esta investigación.
 
+Asi mismo, se utilizo un modelo en relación a la tematica de remoción que se encuentra dentro del paquete "Rmark" y es titulado como "gmultmix Generalized multinomial N-mixture model", el cual toma encuenta las caracteristicas de  abundancia, disponibilidad y probabilidad de detección. 
 
+Los argumentos principales son los siguientes:
+    n= Numero de sitios
+    T= Numero periodo primario 
+    J= Numero periodo secundario
+lam= 3;phi= 0.5; p= 0.3: Son formulas ya establecidas para describir las covariables de detección.
+   
+ Por otra parte las ecuaciones que se utilizaran son las siguientes:
+     y <- array(NA, c(n, T, J))
+     M <- rpois(n, lam) 
+     N <- matrix(NA, n, T) 
+  
+  for(i in 1:n) {
+  N[i,] <- rbinom(T, M[i], phi)
+  y[i,,1] <- rbinom(T, N[i,], p) # Observe some
+  Nleft1 <- N[i,] - y[i,,1] # Remove them
+  y[i,,2] <- rbinom(T, Nleft1, p) # ...
+  Nleft2 <- Nleft1 - y[i,,2]
+  y[i,,3] <- rbinom(T, Nleft2, p)
+}
+  
+  Donde M: representa tamaño de la polación local y N: disponibilidad de los individuos detectados.
+  
+  
+   
+   
 
 
 
